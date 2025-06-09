@@ -10,7 +10,8 @@ import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { TwitchLogo } from "@phosphor-icons/react";
+import { GithubLogoIcon } from "@phosphor-icons/react";
+import { authClient } from "@/lib/auth-client"
 
 
 const loginSchema = z.object({
@@ -34,8 +35,23 @@ export function LoginForm() {
   })
 
   async function onSubmit(formData: LoginFormValues) {
-
-
+    await authClient.signIn.email({
+      email: formData.email,
+      password: formData.password,
+      callbackURL: "/dashboard"
+    }, {
+      onRequest: (ctx) => {},
+      onSuccess: (ctx) => {
+        console.log("LOGADO: ",ctx)
+        router.replace("/dashboard")
+      },
+      onError: (ctx) => {
+        console.log("ERRO AO LOGAR: ", ctx)
+        if (ctx.error.code === "INVALID_EMAIL_OR_PASSWORD") {
+          alert("Email ou senha incorretos")
+        }
+      }
+    })
   }
 
   return (
@@ -114,11 +130,11 @@ export function LoginForm() {
         <Button
           type="button"
           variant="outline"
-          className="w-full bg-[#9146FF] text-white hover:bg-[#7d3bdf] hover:text-white"
+          className="w-full bg-[#303031] text-white hover:bg-[#232324] hover:text-white"
           onClick={async () => { }}
         >
-          <TwitchLogo className="mr-2 h-4 w-4" />
-          Entrar com Twitch
+          <GithubLogoIcon className="mr-2 h-4 w-4" />
+          Entrar com GitHub
         </Button>
       </form>
     </Form>
