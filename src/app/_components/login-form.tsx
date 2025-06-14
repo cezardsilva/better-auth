@@ -10,8 +10,9 @@ import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { GithubLogoIcon } from "@phosphor-icons/react";
+import { GithubLogoIcon, GoogleLogoIcon } from "@phosphor-icons/react";
 import { authClient } from "@/lib/auth-client"
+import { handleClientScriptLoad } from "next/script"
 
 
 const loginSchema = z.object({
@@ -53,6 +54,41 @@ export function LoginForm() {
       }
     })
   }
+
+async function handleGithubSignIn() {
+  await authClient.signIn.social({
+    provider: "github",
+    callbackURL: "/dashboard"
+  }, {
+    onRequest: (ctx) => setIsLoading(true),
+    // Remova o router.replace("/dashboard") daqui!
+    onSuccess: (ctx) => {
+      console.log("LOGADO COM GITHUB: ", ctx)
+      // NÃO redirecione manualmente!
+    },
+    onError: (ctx) => {
+      console.log("ERRO AO LOGAR COM GITHUB: ", ctx)
+      alert("Erro ao logar com GitHub")
+    }
+  })
+}
+  async function handleGoogleSignIn() {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard"
+  }, {
+    onRequest: (ctx) => setIsLoading(true),
+    // Remova o router.replace("/dashboard") daqui!
+    onSuccess: (ctx) => {
+      console.log("LOGADO COM GITHUB: ", ctx)
+      // NÃO redirecione manualmente!
+    },
+    onError: (ctx) => {
+      console.log("ERRO AO LOGAR COM GITHUB: ", ctx)
+      alert("Erro ao logar com GitHub")
+    }
+  })
+}
 
   return (
     <Form {...form}>
@@ -107,7 +143,7 @@ export function LoginForm() {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+        <Button type="submit" className="w-full cursor-pointer" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -130,8 +166,20 @@ export function LoginForm() {
         <Button
           type="button"
           variant="outline"
-          className="w-full bg-[#303031] text-white hover:bg-[#232324] hover:text-white"
-          onClick={async () => { }}
+          className="w-full bg-[#3939ff] text-white hover:bg-[#516aa0] hover:text-white cursor-pointer"
+          disabled={isLoading}
+          onClick={handleGoogleSignIn}
+        >
+          <GoogleLogoIcon className="mr-2 h-4 w-4" />
+          Entrar com Google
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full bg-[#303031] text-white hover:bg-[#232324] hover:text-white cursor-pointer"
+          disabled={isLoading}
+          onClick={handleGithubSignIn}
         >
           <GithubLogoIcon className="mr-2 h-4 w-4" />
           Entrar com GitHub

@@ -19,7 +19,7 @@ export function ButtonSignOut() {
   }
 
   return (
-    <Button onClick={signOut}>
+    <Button onClick={signOut} style={{ cursor: "pointer" }}>
       Sair da conta
     </Button>
   );

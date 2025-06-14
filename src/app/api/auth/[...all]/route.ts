@@ -1,6 +1,5 @@
-import { auth } from "@/lib/auth"; // path to your auth file
+console.log("API AUTH ROUTE HIT", new Date().toISOString());
+import { auth } from "@/lib/auth";
 import { toNextJsHandler } from "better-auth/next-js";
- 
-console.log("Auth carregado:", auth);
 
 export const { POST, GET } = toNextJsHandler(auth);
