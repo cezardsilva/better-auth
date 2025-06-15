@@ -18,9 +18,16 @@ export function AvatarMenu({ user }: { user: any }) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="cursor-pointer">
-            <AvatarImage src={user.image || undefined} alt={user.name || "Avatar"} />
+            <AvatarImage
+              src={user.image || undefined}
+              alt={user.name || "Avatar"}
+            />
             <AvatarFallback>
-              {user.name?.split(" ").map((n: string) => n[0]).join("").toUpperCase() || "?"}
+              {user.name
+                ?.split(" ")
+                .map((n: string) => n[0])
+                .join("")
+                .toUpperCase() || "?"}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
@@ -32,7 +39,7 @@ export function AvatarMenu({ user }: { user: any }) {
               await authClient.signOut();
               window.location.replace("/");
             }}
-            className="flex items-center"
+            className="flex items-center cursor-poiter"
           >
             <LogOut className="mr-2 h-4 w-4" />
             Sair

@@ -1,14 +1,31 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { AppSidebar } from "./_components/app-sidebar";
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { DataTable } from "@/components/data-table";
-import { SectionCards } from "@/components/section-cards";
-import { SiteHeader } from "./_components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { AvatarMenu } from "./_components/avatar-menu";
 
-import data from "./data.json";
+import { LogOut } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+
+import { AppSidebar } from "@/components/app-sidebar"
+import { ChartAreaInteractive } from "@/components/chart-area-interactive"
+import { DataTable } from "@/components/data-table"
+import { SectionCards } from "@/components/section-cards"
+import { SiteHeader } from "@/components/site-header"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar"
+
+import data from "./data.json"
 
 export default async function Dashboard() {
   const session = await auth.api.getSession({
@@ -28,21 +45,9 @@ export default async function Dashboard() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar
-        user={{
-          name: session.user.name,
-          email: session.user.email ?? "",
-          image: session.user.image ?? undefined,
-        }}
-      />
+      <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader
-          user={{
-            name: session.user.name,
-            image: session.user.image || undefined,
-          }}
-        />
-
+        <SiteHeader />
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
@@ -56,5 +61,5 @@ export default async function Dashboard() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }
