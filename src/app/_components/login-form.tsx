@@ -13,7 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { GithubLogoIcon, GoogleLogoIcon } from "@phosphor-icons/react";
 import { authClient } from "@/lib/auth-client"
 import { handleClientScriptLoad } from "next/script"
-
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -26,6 +26,8 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+  const [showErrorModal, setShowErrorModal] = useState(false)
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -61,14 +63,12 @@ async function handleGithubSignIn() {
     callbackURL: "/dashboard"
   }, {
     onRequest: (ctx) => setIsLoading(true),
-    // Remova o router.replace("/dashboard") daqui!
     onSuccess: (ctx) => {
       console.log("LOGADO COM GITHUB: ", ctx)
-      // NÃO redirecione manualmente!
     },
     onError: (ctx) => {
       console.log("ERRO AO LOGAR COM GITHUB: ", ctx)
-      alert("Erro ao logar com GitHub")
+      setShowErrorModal(true)
     }
   })
 }
@@ -78,19 +78,29 @@ async function handleGithubSignIn() {
       callbackURL: "/dashboard"
   }, {
     onRequest: (ctx) => setIsLoading(true),
-    // Remova o router.replace("/dashboard") daqui!
     onSuccess: (ctx) => {
-      console.log("LOGADO COM GITHUB: ", ctx)
-      // NÃO redirecione manualmente!
+      console.log("LOGADO COM GOOGLE: ", ctx)
     },
     onError: (ctx) => {
-      console.log("ERRO AO LOGAR COM GITHUB: ", ctx)
-      alert("Erro ao logar com GitHub")
+      console.log("ERRO AO LOGAR COM GOOLE: ", ctx)
+      setShowErrorModal(true)
     }
   })
 }
 
   return (
+        <>
+      <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Erro</DialogTitle>
+          </DialogHeader>
+          <div>{error}</div>
+          <DialogFooter>
+            <Button onClick={() => setShowErrorModal(false)}>Fechar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
@@ -186,5 +196,6 @@ async function handleGithubSignIn() {
         </Button>
       </form>
     </Form>
+    </>
   )
 }
