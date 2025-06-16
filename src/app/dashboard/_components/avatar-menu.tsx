@@ -14,7 +14,7 @@ import { authClient } from "@/lib/auth-client";
 
 export function AvatarMenu({ user }: { user: any }) {
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed top-2 right-4 z-50">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="cursor-pointer">
